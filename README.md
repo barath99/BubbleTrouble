@@ -1,2 +1,2 @@
 # BubbleTrouble
-An interesting game created using JavaScript. Blast the bubbles and keep your cannon safe! 
+A simple interesting game created using JavaScript. Blast the bubbles and keep your cannon safe! 
