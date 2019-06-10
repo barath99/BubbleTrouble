@@ -131,7 +131,7 @@ canvas{
 
 #loadtext{
   margin:10px;
-  padding-top: 105px;
+  padding-top: 75px;
   color:#ffffff;
 }
 #inst{
@@ -188,4 +188,45 @@ canvas{
   transition: 0.8s;
   position: relative;
   top:2px;
+}
+
+#PlayGame3{
+  background-color: transparent;
+  border-radius: 6px;
+  padding: 5px 20px;
+  border-color: #ffffff;
+  margin: 20px;
+  color: #ffffff;
+  border-style: solid;
+  outline: none;
+  border-width: medium;
+}
+#PlayGame3:hover{
+  background-color: #ffffff;
+  border-radius: 6px;
+  padding: 5px 20px;
+  border-color: #ffffff;
+  margin: 20px;
+  color: #000000;
+  border-style: solid;
+  outline: none;
+  transition: 0.8s;
+}
+#PlayGame3:active{
+  background-color: #ffffff;
+  border-radius: 6px;
+  padding: 5px 20px;
+  border-color: #ffffff;
+  margin: 20px;
+  color: #000000;
+  border-style: solid;
+  outline: none;
+  transition: 0.8s;
+  position: relative;
+  top:2px;
+}
+#Accuracy{
+  font-family: 'Heebo', sans-serif;
+  color:#ffffff;
+  margin-bottom: 40px;
 }
