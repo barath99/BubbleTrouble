@@ -1,5 +1,16 @@
+window.onload = function() {
+  var check= localStorage.getItem("wannaReplay");
+  if(check==="1")
+  {
+   var abcd = document.getElementById('PlayGame1');
+   abcd.click();
+  }
+};
+
+
 document.getElementById('canvas').style.display = 'none';
 document.getElementById('PlayGame2').style.display = 'none';
+document.getElementById('PlayGame3').style.display = 'none';
 
 
 var myCannon;
@@ -9,14 +20,7 @@ var mybullet = [];
 var myScore;
 var flag;
 var pause;
-
-
-  if(localStorage.getItem("wannaReplay")===1)
-  {
-   var selfclicker = document.getElementById("PlayGame1");
-   selfclicker.click();
-  }
-
+var key;
 
 document.getElementById("PlayGame1").onclick = function() {
   localStorage.setItem("wannaReplay",0);
@@ -31,7 +35,10 @@ document.getElementById("PlayGame1").onclick = function() {
 document.getElementById("PlayGame2").onclick = function() {
   localStorage.setItem("wannaReplay",1);
   location.reload();
-
+};
+document.getElementById("PlayGame3").onclick = function() {
+  localStorage.setItem("wannaReplay",0);
+  location.reload();
 };
 
 gameArea = {
@@ -45,13 +52,16 @@ gameArea = {
     flag=0;
     pause=false;
     myCannon = new cannon(210, innerHeight - 50, 80, 30);
-    myScore = new score(375, 30);
+    myScore = new score(375,30,375,55);
     myCannon.cannonDraw();
-    if (sessionStorage.getItem("Highscore") == null) {
-      sessionStorage.setItem("Highscore", 0);
+    if (localStorage.getItem("Highscore") === null) {
+      localStorage.setItem("Highscore", 0);
     }
 
+
     var interval = setInterval(gameupdater, 20);
+
+
     this.frameNo = 1;
 
     window.addEventListener("keydown", function(e) {
@@ -68,13 +78,26 @@ gameArea = {
   },
   resume: function()
 	 {
-		 interval=setInterval(updateGameArea,20);
+		 pause=false;
 	 },
   stop: function() {
     clearInterval(this.interval);
   }
 
 };
+
+function togglePause()
+{
+    if (!pause)
+    {
+        pause = true;
+    }
+    else if (pause)
+    {
+       pause= false;
+    }
+
+}
 
 //--------------------------Cannon-------------------------//
 function cannon(x, y, width, height) {
@@ -129,24 +152,32 @@ function bullet(x, y, width, height) {
   };
 }
 //--------------------------Score-------------------------//
-function score(x, y, width, height) {
+function score(x, y, x2, y2) {
   this.x = x;
   this.y = y;
+  this.x2=x2;
+  this.y2=y2;
 
   this.update = function() {
     ctx = gameArea.context;
     ctx.fillStyle = "black";
     ctx.font = "20px Times New Roman";
     ctx.fillText(this.scoreText, this.x, this.y);
+
+    ctx.fillStyle = "black";
+    ctx.font = "20px Times New Roman";
+    ctx.fillText(this.HighscoreText, this.x2, this.y2);
   };
 }
 //--------------------------Bubbles-------------------------//
-function bubble(x, y, radius, x_velocity) {
+function bubble(x, y, radius, x_velocity, y_velocity) {
   this.x = x;
   this.y = y;
-  this.radius = radius;
+  this.radius=radius;
+  this.futureStrength=(radius-14)/2;
+  this.strength = radius-14;
   this.x_velocity = x_velocity;
-  this.y_velocity = 0;
+  this.y_velocity = y_velocity;
   this.alive = 1;
   this.crash=0;
 
@@ -156,6 +187,11 @@ function bubble(x, y, radius, x_velocity) {
     ctx.fillStyle = "#6c5ce7";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, true);
     ctx.fill();
+    ctx.fillStyle="#ffffff";
+    if(this.strength>=10){
+    ctx.fillText(this.strength, this.x-10, this.y+3);}
+    else{
+    ctx.fillText(this.strength, (this.x-3), this.y+3);}
     ctx.closePath();
   };
   this.newPos = function() {
@@ -196,36 +232,56 @@ function bubble(x, y, radius, x_velocity) {
 
   this.strike = function(object) {
     object.alive = 0;
-    this.radius -= 1;
-    if(this.radius <=15)
-      this.alive = 0;
+    this.strength -= 1;
+    if(this.strength <1)
+    {  this.alive = 0;
+      if(this.futureStrength>=3)
+      {
+        if(this.y<=100){
+        mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-5));
+        mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-5));}
+        else if(this.y<=200){
+          mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-6.5));
+          mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-6.5));
+        }
+        else if(this.y<=350){
+          mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-8));
+          mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-8));
+        }
+        else {
+          mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-10));
+          mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-10));
+        }
+      }
+    }
   };
+}
+//-------------------------Bubble Creator------------------------//
+function bubbleCreator(rad)
+{
+  this.radius=rad;
+  mybubble.push(new bubble(this.radius + 5, 40, this.radius, 5, 0));
 }
 //--------------------------Game Updater-------------------------//
 function gameupdater() {
+  if (gameArea.keys && gameArea.keys[82] == true) {
+    resumeGame();
+  }
+  if(!pause)
+  {
 
   for (var i = 0; i < mybubble.length; i++) {
     if(mybubble[i].alive==1)
     {
     if (myCannon.crashWith(mybubble[i])) {
-      if (flag > (sessionStorage.getItem("Highscore")))
-        sessionStorage.setItem("Highscore", flag);
+      if (flag > (localStorage.getItem("Highscore")))
+        localStorage.setItem("Highscore", flag);
       gameArea.stop();
       doThis();
       return;
      }
     }
   }
-function doThis(){
-  document.getElementById('loadtext').style.display = 'block';
-  document.getElementById('PlayGame2').style.display = 'block';
-  document.getElementById('inst').style.display = 'block';
-  document.getElementById('canvas').style.display = 'none';
-  document.getElementById('screen1').style.display = 'block';
-  document.getElementById('loadtext').innerHTML="Cannon Crashed!!";
-  document.getElementById('inst').innerHTML="Your Score is : "+flag;
-  document.getElementById('PlayGame2').innerHTML="Start a New Game";
-}
 
   for (i = 0; i < mybubble.length; i++) {
     for (var j = 0; j < mybullet.length; j++) {
@@ -247,12 +303,13 @@ function doThis(){
   if (gameArea.keys && gameArea.keys[39] == true) {
     moveRight();
   }
-  if (gameArea.keys && gameArea.keys[39] == true) {
-    pauseGame();
+
+  if (gameArea.keys && gameArea.keys[80] == true)
+  {
+    togglePause();
   }
-  if (gameArea.keys && gameArea.keys[82] == true) {
-    resumeGame();
-  }
+
+
   var a;
   if(flag<30)
   a=7;
@@ -271,8 +328,8 @@ function doThis(){
   gameArea.frameNo += 1;
   if (gameArea.frameNo == 2 || gameArea.frameNo % easiness == 0) {
     var rad = 15 + Math.floor(Math.random() * 20);
-    mybubble.push(new bubble(rad + 5, 40, rad, 5));
-    if (easiness > 50) {
+    bubbleCreator(rad);
+      if (easiness > 100) {
       easiness -= 20;
     }
   }
@@ -295,9 +352,11 @@ function doThis(){
 
   myCannon.newPos();
   myCannon.cannonDraw();
-  myScore.scoreText = "SCORE :" + flag;
-  myScore.update();
+  myScore.scoreText = "SCORE : " + flag;
+  myScore.HighscoreText = "   BEST : " + localStorage.getItem("Highscore");
 
+  myScore.update();
+}
 }
 
 function moveLeft() {
@@ -308,16 +367,6 @@ function moveRight() {
   myCannon.move = +15;
 }
 
-function pauseGame()
- {
-	 if (!pause)
-	 {
-	 pause=true;
-	 gameArea.stop();
-	 return;
-	 }
- }
-
 function resumeGame()
 {
 	 if(pause)
@@ -326,4 +375,16 @@ function resumeGame()
 	   gameArea.resume();
 		 return;
     }
+  }
+
+function doThis(){
+    document.getElementById('loadtext').style.display = 'block';
+    document.getElementById('PlayGame2').style.display = 'block';
+    document.getElementById('PlayGame3').style.display = 'block';
+    document.getElementById('inst').style.display = 'block';
+    document.getElementById('canvas').style.display = 'none';
+    document.getElementById('screen1').style.display = 'block';
+    document.getElementById('loadtext').innerHTML="Cannon Crashed!!";
+    document.getElementById('inst').innerHTML="Your Score is : "+flag;
+    document.getElementById('Accuracy').innerHTML="Your Aiming Accuracy is "+Math.floor(flag/mybullet.length*100,2)+" %";
   }
