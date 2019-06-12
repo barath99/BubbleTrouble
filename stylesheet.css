@@ -85,7 +85,7 @@ h2{
 }
 
 canvas{
-    background-image: url('https://github.com/barath99/BubbleTrouble/blob/master/bg.png');
+    background-image: url('bg.png');    
     margin:none;
     padding: none;
     border-radius: 7px;
