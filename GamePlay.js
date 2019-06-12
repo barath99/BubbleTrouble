@@ -49,12 +49,12 @@ gameArea = {
 
   start: function() {
     this.canvas.width = 500;
-    this.canvas.height = 612;
+    this.canvas.height = 608;
     this.context = this.canvas.getContext("2d");
     easiness = 500;
     flag=0;
     pause=false;
-    myCannon = new cannon(210, 511, 80, 30);
+    myCannon = new cannon(210, 512, 80, 30);
     myScore = new score(375,30,375,55);
     myCannon.cannonDraw();
     if (localStorage.getItem("Highscore") === null) {
