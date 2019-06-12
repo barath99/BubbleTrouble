@@ -49,12 +49,12 @@ gameArea = {
 
   start: function() {
     this.canvas.width = 500;
-    this.canvas.height = 626;
+    this.canvas.height = 620;
     this.context = this.canvas.getContext("2d");
     easiness = 500;
     flag=0;
     pause=false;
-    myCannon = new cannon(210, 516, 80, 30);
+    myCannon = new cannon(210, 510, 80, 30);
     myScore = new score(375,30,375,55);
     myCannon.cannonDraw();
     if (localStorage.getItem("Highscore") === null) {
@@ -201,7 +201,7 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
     ctx.closePath();
   };
   this.newPos = function() {
-    if (this.y >= 606 - this.radius) {
+    if (this.y >= 615 - this.radius) {
       this.y_velocity = -1 * this.y_velocity;
     } else
       this.y_velocity += 0.2;
@@ -245,8 +245,8 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
       if(this.futureStrength>=3)
       {
         if(this.y<=100){
-        mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-5));
-        mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-5));}
+        mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-4));
+        mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-4));}
         else if(this.y<=200){
           mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), 5,-6.5));
           mybubble.push(new bubble(this.x, this.y, Math.floor(this.futureStrength+14,1), -5,-6.5));
