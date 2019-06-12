@@ -6,7 +6,10 @@ window.onload = function() {
    abcd.click();
   }
 };
-
+var cannon1 = new Image()
+cannon1.src = 'cannon1.png';
+var bullet1 = new Image()
+bullet1.src = 'bullet.png';
 
 document.getElementById('canvas').style.display = 'none';
 document.getElementById('PlayGame2').style.display = 'none';
@@ -46,12 +49,12 @@ gameArea = {
 
   start: function() {
     this.canvas.width = 500;
-    this.canvas.height = innerHeight - 20;
+    this.canvas.height = 626;
     this.context = this.canvas.getContext("2d");
     easiness = 500;
     flag=0;
     pause=false;
-    myCannon = new cannon(210, innerHeight - 50, 80, 30);
+    myCannon = new cannon(210, 516, 80, 30);
     myScore = new score(375,30,375,55);
     myCannon.cannonDraw();
     if (localStorage.getItem("Highscore") === null) {
@@ -109,8 +112,10 @@ function cannon(x, y, width, height) {
 
   this.cannonDraw = function() {
     var ctx = gameArea.context;
-    ctx.fillStyle = "#ff4949";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    //ctx.fillStyle = "#ff4949";
+    //ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(cannon1,this.x,this.y);
+
   };
 
   this.newPos = function() {
@@ -143,8 +148,9 @@ function bullet(x, y, width, height) {
 
   this.bulletDraw = function() {
     var ctx = gameArea.context;
-    ctx.fillStyle = "#fcd307";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    //ctx.fillStyle = "#fcd307";
+    //ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(bullet1,this.x,this.y);
   };
 
   this.newPos = function() {
@@ -195,7 +201,7 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
     ctx.closePath();
   };
   this.newPos = function() {
-    if (this.y >= innerHeight - 20 - this.radius) {
+    if (this.y >= 606 - this.radius) {
       this.y_velocity = -1 * this.y_velocity;
     } else
       this.y_velocity += 0.2;
@@ -214,7 +220,7 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
     this.crash=false;
 
     var distX = Math.abs(this.x - object.x-object.width/2);
-    var distY = Math.abs(this.y - object.y-object.height/2);
+    var distY = Math.abs(this.y - object.y-object.height/3);
 
     if (distX > (object.width/2 + this.radius)) { return false; }
     if (distY > (object.height/2 + this.radius)) { return false; }
@@ -232,6 +238,7 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
 
   this.strike = function(object) {
     object.alive = 0;
+    this.y-=4;
     this.strength -= 1;
     if(this.strength <1)
     {  this.alive = 0;
@@ -306,23 +313,26 @@ function gameupdater() {
 
   if (gameArea.keys && gameArea.keys[80] == true)
   {
+    ctx=gameArea.context;
+    ctx.fillText("GAME PAUSED!",180,300);
+    ctx.fillText("Press R to Resume",175,335);  
     togglePause();
   }
 
 
   var a;
   if(flag<30)
-  a=7;
-  else if(flag<60)
   a=6;
-  else if(flag<90)
+  else if(flag<60)
   a=5;
-  else if(flag<120)
+  else if(flag<90)
   a=4;
-  else
+  else if(flag<120)
   a=3;
+  else
+  a=2;
   if (gameArea.keys && gameArea.keys[32] == true && gameArea.frameNo % a == 0) {
-    mybullet.push(new bullet(myCannon.x + myCannon.width / 2 - 5, myCannon.y, 10, 20));
+    mybullet.push(new bullet(myCannon.x + myCannon.width / 2 - 7, myCannon.y, 10, 20));
   }
 
   gameArea.frameNo += 1;
