@@ -49,7 +49,7 @@ gameArea = {
 
   start: function() {
     this.canvas.width = 500;
-    this.canvas.height = 605;
+    this.canvas.height = 600;
     this.context = this.canvas.getContext("2d");
     easiness = 500;
     flag=0;
@@ -201,7 +201,7 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
     ctx.closePath();
   };
   this.newPos = function() {
-    if (this.y >= 598 - this.radius) {
+    if (this.y >= 591 - this.radius) {
       this.y_velocity = -1 * this.y_velocity;
     } else
       this.y_velocity += 0.2;
