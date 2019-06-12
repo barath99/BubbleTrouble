@@ -49,12 +49,12 @@ gameArea = {
 
   start: function() {
     this.canvas.width = 500;
-    this.canvas.height = 615;
+    this.canvas.height = 612;
     this.context = this.canvas.getContext("2d");
     easiness = 500;
     flag=0;
     pause=false;
-    myCannon = new cannon(210, 510, 80, 30);
+    myCannon = new cannon(210, 511, 80, 30);
     myScore = new score(375,30,375,55);
     myCannon.cannonDraw();
     if (localStorage.getItem("Highscore") === null) {
@@ -201,7 +201,7 @@ function bubble(x, y, radius, x_velocity, y_velocity) {
     ctx.closePath();
   };
   this.newPos = function() {
-    if (this.y >= 612 - this.radius) {
+    if (this.y >= 606 - this.radius) {
       this.y_velocity = -1 * this.y_velocity;
     } else
       this.y_velocity += 0.2;
