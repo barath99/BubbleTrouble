@@ -85,7 +85,7 @@ h2{
 }
 
 canvas{
-    background-color: #f1f4df;
+    background-image: url('bg.png');
     margin:none;
     padding: none;
     border-radius: 7px;
